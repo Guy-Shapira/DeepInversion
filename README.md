@@ -14,6 +14,7 @@
 
 
 # Citation:
+```bibtex
 @inproceedings{yin2020dreaming,
 	title = {Dreaming to Distill: Data-free Knowledge Transfer via DeepInversion},
 	author = {Yin, Hongxu and Molchanov, Pavlo and Alvarez, Jose M. and Li, Zhizhong and Mallya, Arun and Hoiem, Derek and Jha, Niraj K and Kautz, Jan},
@@ -21,3 +22,4 @@
 	month = June,
 	year = {2020}
 }
+```
