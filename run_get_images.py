@@ -7,10 +7,8 @@ import argparse
 import random
 import torch
 import torch.nn as nn
-# import torch.nn.parallel
 import torch.backends.cudnn as cudnn
 import torch.optim as optim
-# import torch.utils.data
 import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as transforms
@@ -21,17 +19,6 @@ import numpy as np
 import os
 import glob
 import collections
-
-# from deepinversion_cifar10 import get_images
-#
-# try:
-#     from apex.apex.parallel import DistributedDataParallel as DDP
-#     from apex.apex import amp, optimizers
-#     USE_APEX = True
-# except ImportError:
-#     print("Please install apex from https://www.github.com/nvidia/apex to run this example.")
-#     print("will attempt to run without it")
-#     USE_APEX = False
 
 #provide intermeiate information
 debug_output = False
@@ -53,14 +40,15 @@ if __name__ == "__main__":
     parser.add_argument('--teacher_weights', default="pretrained/cifar100_n=10_resnet34/t5.pt", type=str, help='path to load weights of the model')
     parser.add_argument('--prefix', default="deep_inverted_images/cifar100_n=10_resnet34/t5", type=str, help='prefix of path to store pics ')
     parser.add_argument('--cuda', type=int, help='cuda to run on')
+    parser.add_argument('--max_label', type=int, help='number of classes to create images from')
     args = parser.parse_args()
 
 
     for i in range(0, args.bn):
         cmd = 'python3.7 deepinversion.py --bs={} --r_feature_weight={} --di_lr={} --exp_descr={}' \
-              ' --di_var_scale={} --di_l2_scale={} --cig_scale={} --counter={} --prefix={} --cuda={}'.format(args.bs, args.r_feature_weight,
+              ' --di_var_scale={} --di_l2_scale={} --cig_scale={} --counter={} --prefix={} --cuda={} --max_label={}'.format(args.bs, args.r_feature_weight,
                                                                                        args.di_lr, args.exp_descr,
                                                                                        args.di_var_scale,
                                                                                        args.di_l2_scale,
-                                                                                       args.cig_scale, i, args.prefix, args.cuda)
+                                                                                       args.cig_scale, i, args.prefix, args.cuda, args.max_label)
         os.system(cmd)
