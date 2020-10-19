@@ -1,9 +1,14 @@
 # Data free model integration
 
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-blue?style=plastic)](./CONTRIBUTING.md)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-blue?style=plastic)]()
 ![GitHub repo size](https://img.shields.io/github/repo-size/Guy-Shapira/DeepInversion?style=plastic)
 
 # Environment setup:
+From the root folder of the project run
+```
+conda env create -f environment.yml
+conda activate deep-inversion
+```
 
 
 
