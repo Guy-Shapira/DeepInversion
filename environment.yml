@@ -1,4 +1,4 @@
-name: inv
+name: deep-inversion
 channels:
   - pytorch
   - conda-forge
@@ -138,5 +138,4 @@ dependencies:
     - pyqt5-sip==4.19.18
     - pyqtchart==5.12
     - pyqtwebengine==5.12.1
-prefix: /home/guy.shapira/miniconda3/envs/inv
 
