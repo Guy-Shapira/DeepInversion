@@ -139,7 +139,7 @@ if __name__ == "__main__":
     parser.add_argument('--resnet', default=34, type=int, help='Resnet type of teacher model')
     args = parser.parse_args()
 
-    print("training Resnet"+str(args.resnet)+" strat_class="+str(args.start_class)+" end_class="+str(args.end_class))
+    print("training Resnet"+str(args.resnet)+" start_class="+str(args.start_class)+" end_class="+str(args.end_class))
 
 
     device = "cuda:7"
