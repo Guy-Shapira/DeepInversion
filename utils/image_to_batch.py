@@ -9,6 +9,7 @@ from PIL import Image
 from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
+import argparse
 
 transform = torchvision.transforms.Compose([
     torchvision.transforms.RandomCrop(32, padding=4),
@@ -17,10 +18,8 @@ transform = torchvision.transforms.Compose([
     torchvision.transforms.Normalize(mean=[0.507, 0.487, 0.441], std=[0.267, 0.256, 0.276])
 ])
 
-teacher_bs_path = "deep_inverted_images/cifar100_n=10_resnet34/t5i/batch_"
-copy_path = "/home/guy.shapira/DeepInv/DeepInversion/Deep/cifar100/deep_inverted_images/cifar100_n=10_resnet34/t5/"
 
-def create_tesnors(num_batches, bs):
+def create_tesnors(num_batches, bs, teacher_bs_path, copy_path):
     for i in range(num_batches):
         batch = None
         if not os.path.isfile(teacher_bs_path + str(i) + "/tensor.pt"):
@@ -37,5 +36,16 @@ def create_tesnors(num_batches, bs):
         os.system(cmd)
 
 
+def main():
+    parser = argparse.ArgumentParser(description='Combining teachers to student')
+    parser.add_argument('--bs', default=64, type=int, help='batch size')
+    parser.add_argument('--num_batches', default=64, type=int, help='number of batches for each teacher')
+    parser.add_argument('--teacher_bs_path' help='path in which images are stored')
+    parser.add_argument('--copy_path', help='path to store images in')
+    args = parser.parse_args()
+    create_tesnors(num_batches=args.num_batches, bs=args.bs,
+        teacher_bs_path=agrs.teacher_bs_path, copy_path=args.copy_path)
+
+
 if __name__ == "__main__":
-    create_tesnors(num_batches=170, bs=64)
+    main()

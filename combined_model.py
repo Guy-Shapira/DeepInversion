@@ -1,6 +1,3 @@
-
-
-
 import torch
 import torchvision
 import numpy as np
@@ -10,7 +7,7 @@ import sys
 import os
 from torchvision.transforms import ToTensor
 from ResNetCifar import ResNet18, ResNet34, ResNet50
-from utils import get_split_cifar100
+from utils.utils import get_split_cifar100
 import argparse
 
 def onehot(num_classes, y, device):
