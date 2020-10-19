@@ -29,7 +29,6 @@ import os
 import glob
 import collections
 from check_teacher import get_split_cifar100
-# from resnet_cifar import ResNet34, ResNet18
 from cifar50 import ResNet18, ResNet50, ResNet34
 
 try:
@@ -46,7 +45,6 @@ except ImportError:
 debug_output = False
 debug_output = True
 
-# device = 'cuda:4'
 CUDA_LAUNCH_BLOCKING=1
 
 
@@ -80,7 +78,7 @@ class DeepInversionFeatureHook():
 def get_images(net, bs=256, epochs=1000, idx=-1, var_scale=0.00005,
                net_student=None, prefix=None, competitive_scale=0.01, train_writer = None, global_iteration=None,
                use_amp=False,
-               optimizer = None, inputs = None, bn_reg_scale = 0.0, random_labels = False, l2_coeff=0.0, device='cuda:7'):
+               optimizer = None, inputs = None, bn_reg_scale = 0.0, random_labels = False, l2_coeff=0.0, device='cuda:7', max_label=49):
     '''
     Function returns inverted images from the pretrained model, parameters are tight to CIFAR dataset
     args in:
@@ -101,6 +99,8 @@ def get_images(net, bs=256, epochs=1000, idx=-1, var_scale=0.00005,
         bn_reg_scale: weight for r_feature_regularization
         random_labels: sample labels from random distribution or use columns of the same class
         l2_coeff: coefficient for L2 loss on input
+        device: default cuda device to run on.
+        max_label: number of labels to genrate images from (should be number of classes in model).
     return:
         A tensor on GPU with shape (bs, 3, 32, 32) for CIFAR
     '''
@@ -124,7 +124,7 @@ def get_images(net, bs=256, epochs=1000, idx=-1, var_scale=0.00005,
 
     # target outputs to generate
     if 1:
-        targets = torch.LongTensor([random.randint(0,9) for _ in range(bs)]).to(device)
+        targets = torch.LongTensor([random.randint(0,max_label) for _ in range(bs)]).to(device)
     # else:
     #     targets = torch.LongTensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9] * 25 + [0, 1, 2, 3, 4, 5]).to('cuda')
 
@@ -299,6 +299,8 @@ if __name__ == "__main__":
     parser.add_argument('--counter', default=0, type=int, help='batch counter')
     parser.add_argument('--prefix', default=".", type=str, help='prefix of path to store pics')
     parser.add_argument('--cuda', default=".", type=int, help='gpu to run on')
+    parser.add_argument('--max_label', default=".", type=int, help='number of labels to genrate images from')
+    
     args = parser.parse_args()
 
     print("loading resnet")
@@ -331,9 +333,6 @@ if __name__ == "__main__":
 
     checkpoint = torch.load(args.teacher_weights)
     net_teacher.load_state_dict(checkpoint, strict=False)
-    # checkpoint = torch.load('p1_81.pt')
-
-    # net_student.load_state_dict(checkpoint,strict=False)
     net_teacher.eval() #important, otherwise generated images will be non natural
     if args.amp:
         # need to do this trick for FP16 support of batchnorms
@@ -352,21 +351,6 @@ if __name__ == "__main__":
         if not os.path.exists(create_folder):
             os.makedirs(create_folder)
 
-    if 0:
-        # loading
-        # transform_test = transforms.Compose([
-        #     transforms.ToTensor(),
-        #     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        # ])
-
-        # testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
-        # testloader = torch.utils.data.DataLoader(testset, batch_size=args.bs, shuffle=True, num_workers=6,
-        #                                          drop_last=True)
-        # # Checking teacher accuracy
-        # print("Checking teacher accuracy")
-        test()
-        exit()
-
 
     train_writer = None  # tensorboard writter
     global_iteration = 0
@@ -384,4 +368,4 @@ if __name__ == "__main__":
                         net_student=net_student, prefix=prefix, competitive_scale=args.cig_scale,
                         train_writer=train_writer, global_iteration=global_iteration, use_amp=args.amp,
                         optimizer=optimizer_di, inputs=inputs, bn_reg_scale=args.r_feature_weight,
-                        var_scale=args.di_var_scale, random_labels=False, l2_coeff=args.di_l2_scale, device=device)
+                        var_scale=args.di_var_scale, random_labels=False, l2_coeff=args.di_l2_scale, device=device, max_label=args.max_label)
