@@ -39,7 +39,7 @@ The images would be saved to *./{args.prefix}/best_images*.
 ### Step 3: Combining the teachers to a student
 
 In order to combine the pretrained teachers (of Step 1) to a student using the generated images (of Step 2), run the following script:
-**python combined_model.py --bs={} - -num_batches={} --n= --num_classes={} --num_epochs={} --teachers_arch={} --checkpoint_dir={} --data_dir={} --save_path={}**
+**python combined_model.py --bs={} - -num_batches={} --n={} --num_classes={} --num_epochs={} --teachers_arch={} --checkpoint_dir={} --data_dir={} --save_path={}**
 Where *bs* is the batch size, *num_batches* is number of batches for each teacher, *n* is the number of teachers, *num_classes* is the number of classes of each teacher, *num_epochs* is number of epochs to train, *teacher_arch* should be either {ResNet18,ResNet34,ResNet50} or any other architecture supplied, *checkpoint_dir* is a path from which teachers checkpoints will be loaded, the wanted format in this directory is (t1.pt, t2.pt,...,tn.pt), *data_dir* is a path in which the deep inverted data is stored, the wanted form should be: subdirectories of t1,t2…In each ti folder should be all the seep inverted data as batchi.pt (where i is the batch number), *save_path* is the path to save the student model in.
 
 ## Citation:
